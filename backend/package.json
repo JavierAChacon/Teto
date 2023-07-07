@@ -1,0 +1,32 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Aprendiendo MERN Stack",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "star": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JavierAChacon/User-Authenticator.git"
+  },
+  "keywords": [
+    "MongoDB",
+    "Node",
+    "Express",
+    "React"
+  ],
+  "author": "Javier Chacon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JavierAChacon/User-Authenticator/issues"
+  },
+  "homepage": "https://github.com/JavierAChacon/User-Authenticator#readme",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^7.3.2"
+  }
+}
