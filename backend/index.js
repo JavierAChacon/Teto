@@ -1,12 +1,18 @@
 import express from "express";
 import connectDB from "./config/db.js";
 import dotenv from "dotenv";
+import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
+
+app.use(express.json());
 
 dotenv.config();    
 
 connectDB();
 
+app.use("/api/users", userRoutes);   
 
-app.listen(4000, () => console.log("Running on port 4000..."));
+const PORT = process.env.PORT || 4000;
+
+app.listen(PORT, () => console.log("Running on port 4000..."));
