@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import generateId from "../helpers/generateId.js";
+import generateJWT from "../helpers/generateJWT.js";
 
 const register = async (req, res) => {
   const { email } = req.body;
@@ -39,9 +40,29 @@ const authenticate = async (req, res) => {
     res.json({
       _id: user._id,
       name: user.name,
-      email: user.email
+      email: user.email,
+      token: generateJWT(user._id)
     });
   }
 };
 
-export { register, authenticate };
+const confirm = async (req, res) => {
+  const { token } = req.params;
+  const userConfirm = await User.findOne({ token });
+
+  if(!userConfirm){
+    const error = new Error("Token no valid");
+    return res.status(403).json({ msg: error.message });
+  }
+
+  try {
+    userConfirm.confirmed = true;
+    userConfirm.token = "";
+    await userConfirm.save();
+    res.json({ msg: "User confirmed succesfully" });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export { register, authenticate, confirm };
