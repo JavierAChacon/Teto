@@ -6,7 +6,7 @@ import ForgotPassword from './pages/ForgotPassword'
 import NewPassword from './pages/NewPassword'
 import ConfirmAccount from './pages/ConfirmAccount'
 
-function App () {
+function App() {
   return (
     <BrowserRouter>
       <Routes>

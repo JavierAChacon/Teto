@@ -3,13 +3,18 @@
 @tailwind components;
 @tailwind utilities;
 
-
 body {
   font-family: 'Roboto', sans-serif;
 }
 
 .loginImage {
   background-image: url(./assets//images/curved6.jpg);
+}
+
+.registerImage {
+  background-image: url(./assets//images/curved14.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .logo {
