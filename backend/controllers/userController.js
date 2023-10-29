@@ -1,6 +1,7 @@
 import User from '../models/User.js'
 import generateId from '../helpers/generateId.js'
 import generateJWT from '../helpers/generateJWT.js'
+import { registerEmail, forgotPasswordEmail } from '../helpers/email.js'
 
 const register = async (req, res) => {
   const { email } = req.body
@@ -12,8 +13,19 @@ const register = async (req, res) => {
   try {
     const user = new User(req.body)
     user.token = generateId()
-    const userStored = await user.save()
-    res.json({ msg: 'Creating user' })
+    await user.save()
+
+    // Send verification email
+    const { email, name, token } = user
+    registerEmail({
+      email,
+      name,
+      token
+    })
+
+    res.json({
+      msg: 'User successfully created, check your email to confirm your account'
+    })
   } catch (error) {
     console.log(error)
   }
@@ -22,7 +34,13 @@ const register = async (req, res) => {
 const authenticate = async (req, res) => {
   const { email, password } = req.body
 
-  //comprobar si el usuario existe
+  // comprobar espacios vacios
+  if ([email, password].includes('')) {
+    const error = new Error('All the fields are required')
+    return res.status(400).json({ msg: error.message })
+  }
+
+  // comprobar si el usuario existe
   const user = await User.findOne({ email })
   if (!user) {
     const error = new Error('The user does not exist')
@@ -35,7 +53,7 @@ const authenticate = async (req, res) => {
     return res.status(403).json({ msg: error.message })
   }
 
-  //comprobar su password
+  // comprobar su password
   if (await user.verifyPassword(password)) {
     res.json({
       _id: user._id,
@@ -43,6 +61,9 @@ const authenticate = async (req, res) => {
       email: user.email,
       token: generateJWT(user._id)
     })
+  } else {
+    const error = new Error('The password is incorrect')
+    return res.status(401).json({ msg: error.message })
   }
 }
 
@@ -67,7 +88,7 @@ const confirm = async (req, res) => {
 
 const forgotPassword = async (req, res) => {
   const { email } = req.body
-  //verificar si existe el usuario
+  // verificar si existe el usuario
   const user = await User.findOne({ email })
   if (!user) {
     const error = new Error('The user does not exist')
@@ -77,6 +98,14 @@ const forgotPassword = async (req, res) => {
   try {
     user.token = generateId()
     await user.save()
+    const { email, name, token } = user
+    // enviar correo
+    forgotPasswordEmail({
+      email,
+      name,
+      token
+    })
+
     res.json({ msg: 'We have sent you an email with the instructions' })
   } catch (error) {
     console.log(error)
@@ -85,7 +114,7 @@ const forgotPassword = async (req, res) => {
 
 const validateToken = async (req, res) => {
   const { token } = req.params
-  //validar que existe token
+  // validar que existe token
   const validToken = await User.findOne({ token })
 
   if (validToken) {
@@ -115,7 +144,8 @@ const setNewPassword = async (req, res) => {
 }
 
 const profile = async (req, res) => {
-  res.json({ msg: 'Ya estas en profile yupi!' })
+  const { user } = req
+  res.json(user)
 }
 
 export {
