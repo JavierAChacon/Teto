@@ -13,7 +13,7 @@ const newProject = async (req, res) => {
 
   try {
     const storedProject = await project.save()
-    res.json(storedProject)
+    res.json({ storedProject, msg: 'Project created successfully!' })
   } catch (error) {
     console.log(error)
   }
@@ -30,13 +30,9 @@ const getProject = async (req, res) => {
     const error = new Error('No valid action')
     return res.status(401).json({ msg: error.message })
   }
-  //Get tasks from an specific project
-  const tasks = await Task.find().where('project').equals(project._id)
-  
-  res.json({
-    project,
-    tasks
-  })
+  // Get tasks from an specific project
+  // const tasks = await Task.find().where('project').equals(project._id)
+  res.json(project)
 }
 
 const editProject = async (req, res) => {
@@ -87,7 +83,6 @@ const deleteProject = async (req, res) => {
 const addCollaborator = async (req, res) => {}
 
 const deleteCollaborator = async (req, res) => {}
-
 
 export {
   getProjects,

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import axiosClient from '../config/AxiosClient.jsx'
-import Alert from '../components/Alert.jsx'
+import axiosClient from '../../config/axiosClient.js'
+import Alert from '../../components/Alert.jsx'
 
 const NewPassword = () => {
   const params = useParams()
@@ -31,7 +31,7 @@ const NewPassword = () => {
       }
     }
     verifyToken()
-  }, [token])
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()

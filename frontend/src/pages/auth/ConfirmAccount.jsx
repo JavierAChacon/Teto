@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import axiosClient from '../config/AxiosClient'
-import Alert from '../components/Alert'
+import axiosClient from '../../config/axiosClient.js'
+import Alert from '../../components/Alert'
 
 const ConfirmAccount = () => {
   const { token } = useParams()
@@ -27,7 +27,7 @@ const ConfirmAccount = () => {
       }
     }
     confirmAccount()
-  }, [token, navigate])
+  }, [])
   const { msg } = alert
   return (
     <div className='min-h-screen bg-blue-100 p-[5%] md:p-0'>

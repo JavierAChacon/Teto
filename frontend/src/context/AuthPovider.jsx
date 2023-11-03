@@ -6,10 +6,10 @@ const AuthContext = createContext()
 const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({})
   const [isLoading, setIsLoading] = useState(true)
-  const navigate = useNavigate()
+
   useEffect(() => {
     const authenticateUser = async () => {
-      const token = localStorage.getItem('token')
+      const token = sessionStorage.getItem('token')
 
       if (!token) {
         setIsLoading(false)
@@ -25,7 +25,6 @@ const AuthProvider = ({ children }) => {
       try {
         const { data } = await axiosClient('/users/profile', config)
         setAuth(data)
-        navigate('/projects')
       } catch (error) {
         setAuth({})
       } finally {
@@ -33,7 +32,7 @@ const AuthProvider = ({ children }) => {
       }
     }
     authenticateUser()
-  }, [navigate])
+  }, [])
   return (
     <AuthContext.Provider value={{ setAuth, auth, isLoading }}>
       {children}

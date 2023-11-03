@@ -1,14 +1,15 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import axiosClient from '../config/axiosClient'
-import Alert from '../components/Alert'
-import useAuth from '../../hooks/useAuth'
+import { Link, useNavigate } from 'react-router-dom'
+import axiosClient from '../../config/axiosClient.js'
+import Alert from '../../components/Alert.jsx'
+import useAuth from '../../hooks/useAuth.jsx'
 
 const Login = () => {
   const [alert, setAlert] = useState({})
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const { setAuth } = useAuth()
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -17,11 +18,12 @@ const Login = () => {
         email,
         password
       })
-      localStorage.setItem('token', data.token)
+      sessionStorage.setItem('token', data.token)
       setAuth(data)
       setAlert({})
       setEmail('')
       setPassword('')
+      navigate('/projects')
     } catch (error) {
       setAlert({
         msg: error.response.data.msg,
