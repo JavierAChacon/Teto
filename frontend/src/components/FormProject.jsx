@@ -17,10 +17,10 @@ const FormProject = () => {
       setId(project._id)
       setName(project.name)
       setDescription(project.description)
-      setDeliveryDate(project.deliveryDate.split('T')[0])
+      setDeliveryDate(project.deliveryDate?.split('T')[0])
       setClient(project.client)
     }
-  }, [params])
+  }, [params, project._id, project.name, project.description, project.deliveryDate, project.client])
 
   const handleSubmit = async e => {
     e.preventDefault()

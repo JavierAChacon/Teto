@@ -12,6 +12,7 @@ const ProjectsProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true)
   const navigate = useNavigate()
   const { auth } = useAuth()
+  const [modalFormTask, setModalFormTask] = useState(false)
 
   useEffect(() => {
     const getProjects = async () => {
@@ -36,7 +37,7 @@ const ProjectsProvider = ({ children }) => {
     getProjects()
   }, [auth])
 
-  const submitProjects = async project => {
+  const submitProjects = async (project) => {
     const token = sessionStorage.getItem('token')
     const config = {
       headers: {
@@ -45,7 +46,7 @@ const ProjectsProvider = ({ children }) => {
       }
     }
 
-    const createProject = async project => {
+    const createProject = async (project) => {
       try {
         const { data } = await axiosClient.post('/projects', project, config)
         setProjects([...projects, data.storedProject])
@@ -60,10 +61,16 @@ const ProjectsProvider = ({ children }) => {
       }
     }
 
-    const updateProject = async project => {
+    const updateProject = async (project) => {
       try {
-        const { data } = await axiosClient.put(`/projects/${project.id}`, project, config)
-        const updatedProjects = projects.map(projectState => projectState._id === data._id ? data : projectState)
+        const { data } = await axiosClient.put(
+          `/projects/${project.id}`,
+          project,
+          config
+        )
+        const updatedProjects = projects.map((projectState) =>
+          projectState._id === data._id ? data : projectState
+        )
         setProjects(updatedProjects)
         setAlert({
           msg: 'Project edited successfully',
@@ -87,7 +94,7 @@ const ProjectsProvider = ({ children }) => {
     setTimeout(() => navigate('/projects'), [2000])
   }
 
-  const getProject = async id => {
+  const getProject = async (id) => {
     const token = sessionStorage.getItem('token')
     const config = {
       headers: {
@@ -110,6 +117,58 @@ const ProjectsProvider = ({ children }) => {
     }
   }
 
+  const deleteProject = async (id) => {
+    const token = sessionStorage.getItem('token')
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+    if (token) {
+      try {
+        const { data } = await axiosClient.delete(`/projects/${id}`, config)
+        const updatedProjects = projects.filter(
+          (projectState) => projectState._id !== id
+        )
+        setProjects(updatedProjects)
+        setAlert({
+          msg: data.msg,
+          error: false
+        })
+        setTimeout(() => {
+          navigate('/projects')
+        }, 1000)
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+  }
+
+  const handleModalTask = () => {
+    setModalFormTask(!modalFormTask)
+  }
+
+  const submitTask = async (task) => {
+    const token = sessionStorage.getItem('token')
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+    try {
+      const { data } = await axiosClient.post('/tasks', task, config)
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <ProjectsContext.Provider
       value={{
@@ -120,7 +179,11 @@ const ProjectsProvider = ({ children }) => {
         submitProjects,
         getProject,
         project,
-        isLoading
+        isLoading,
+        deleteProject,
+        modalFormTask,
+        handleModalTask,
+        submitTask
       }}
     >
       {children}
