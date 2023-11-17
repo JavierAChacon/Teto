@@ -13,7 +13,7 @@ const ProjectDetail = () => {
 
   useEffect(() => {
     getProject(id)
-  }, [id])
+  }, [])
 
   
   if (!isLoading) {
