@@ -1,9 +1,11 @@
-import { formatDate } from "../helpers/formatDate"
+import { formatDate } from '../helpers/formatDate'
+import useProjects from '../hooks/useProjects'
 
 const Task = ({ task }) => {
   const { description, priority, name, deliveryDate, state } = task
+  const { handleEditTaskModal } = useProjects()
   return (
-    <div className='relative flex items-center rounded-lg border-b bg-white p-2 justify-between'>
+    <div className='relative flex items-center justify-between rounded-lg border-b bg-white p-2'>
       <div>
         <h4 className='font-bold'>{name}</h4>
         <p>{description}</p>
@@ -11,8 +13,21 @@ const Task = ({ task }) => {
         <p>{formatDate(deliveryDate)}</p>
       </div>
       <div className='flex gap-x-2'>
-        {state ? <button className="p-1 bg-green-500 rounded-lg text-white">Done</button> : <button className="p-1 bg-blue-500 rounded-lg text-white font-semibold">Undone</button>}
-        <button>Edit</button>
+        {state ? (
+          <button className='rounded-lg bg-green-500 p-1 text-white'>
+            Done
+          </button>
+        ) : (
+          <button className='rounded-lg bg-blue-500 p-1 font-semibold text-white'>
+            Undone
+          </button>
+        )}
+        <button
+          onClick={() => handleEditTaskModal(task)}
+          className='rounded-lg border bg-gray-400 p-2 text-white'
+        >
+          Edit
+        </button>
         <button>Delete</button>
       </div>
     </div>

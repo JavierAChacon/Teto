@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import useProjects from '../../hooks/useProjects'
 import Spinner from '../../components/Spinner'
 import ModalFormTask from '../../components/ModalFormTask'
@@ -9,7 +9,6 @@ const ProjectDetail = () => {
   const { id } = useParams()
   const { getProject, project, isLoading, handleModalTask } = useProjects()
   const { name } = project
-  const [modal, setModal] = useState(false)
 
   useEffect(() => {
     getProject(id)
@@ -63,7 +62,7 @@ const ProjectDetail = () => {
             />
           </svg>
         </button>
-        <ModalFormTask modal={modal} setModal={setModal} />
+        <ModalFormTask />
         <h2 className='text-xl font-semibold mt-3'>Project Tasks: </h2>
         <div className='flex flex-col gap-y-3 pt-2'>
           {project.tasks?.map(task => <Task key ={task._id} task={task}/>)}

@@ -13,6 +13,7 @@ const ProjectsProvider = ({ children }) => {
   const navigate = useNavigate()
   const { auth } = useAuth()
   const [modalFormTask, setModalFormTask] = useState(false)
+  const [task, setTask] = useState({})
 
   useEffect(() => {
     const getProjects = async () => {
@@ -152,7 +153,7 @@ const ProjectsProvider = ({ children }) => {
     setModalFormTask(!modalFormTask)
   }
 
-  const submitTask = async (task) => {
+  const submitTask = async task => {
     const token = sessionStorage.getItem('token')
     const config = {
       headers: {
@@ -160,13 +161,29 @@ const ProjectsProvider = ({ children }) => {
         Authorization: `Bearer ${token}`
       }
     }
+    if (task.id) {
+      const { data } = await axiosClient.put(`/tasks/${task.id}`, task, config)
 
-    try {
-      const { data } = await axiosClient.post('/tasks', task, config)
-      console.log(data)
-    } catch (error) {
-      console.log(error)
+      const updatedProject = {...project}
+      updatedProject.tasks = updatedProject.tasks.map(taskState => taskState._id === data._id ? data : taskState)
+      setProject(updatedProject)
+      setAlert({})
+    }else{
+      try {
+        const { data } = await axiosClient.post('/tasks', task, config)
+        const updatedProject = { ...project }
+        updatedProject.tasks = [...project.tasks, data]
+        setProject(updatedProject)
+      } catch (error) {
+        console.log(error)
+      }
     }
+    setModalFormTask(false)
+  }
+
+  const handleEditTaskModal = (task) => {
+    setTask(task)
+    setModalFormTask(true)
   }
 
   return (
@@ -183,7 +200,9 @@ const ProjectsProvider = ({ children }) => {
         deleteProject,
         modalFormTask,
         handleModalTask,
-        submitTask
+        submitTask,
+        handleEditTaskModal,
+        task
       }}
     >
       {children}

@@ -7,14 +7,31 @@ import { useParams } from 'react-router-dom'
 const PRIORITY = ['Low', 'Medium', 'High']
 
 const ModalFormTask = () => {
+  const [id, setId] = useState('')
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [priority, setPriority] = useState('')
   const [deliveryDate, setDeliveryDate] = useState('')
-  const { modalFormTask, handleModalTask, alert, setAlert, submitTask } = useProjects()
+  const { modalFormTask, handleModalTask, alert, setAlert, submitTask, task } = useProjects()
   const params = useParams()
 
-  const handleSubmit = e => {
+  useEffect(() => {
+    if(task?.deliveryDate){
+      setId(task._id)
+      setName(task.name)
+      setDescription(task.description)
+      setDeliveryDate(task.deliveryDate.split('T')[0])
+      setPriority(task.priority)
+    }else{
+      setId('')
+      setName('')
+      setDescription('')
+      setDeliveryDate('')
+      setPriority('')
+    }
+  }, [task])
+  
+  const handleSubmit = async e => {
     e.preventDefault()
 
     if ([name, description, deliveryDate, priority].includes('')) {
@@ -23,7 +40,14 @@ const ModalFormTask = () => {
         error: true
       })
     }
-    submitTask({ name, description, deliveryDate, priority, project: params.id })
+   await submitTask({ id, name, description, deliveryDate, priority, project: params.id })
+    
+
+   setId('')
+   setName('')
+   setDescription('')
+   setPriority('')
+   setDeliveryDate('')
   }
 
   const { msg } = alert
@@ -94,7 +118,7 @@ const ModalFormTask = () => {
                     as='h3'
                     className='text-lg font-bold leading-6 text-sky-600'
                   >
-                    Create task
+                    {id ? 'Edit task' : 'Create task'}
                   </Dialog.Title>
                   {msg && <Alert alert={alert} />}
                   <form onSubmit={handleSubmit} className='my-10'>
@@ -163,7 +187,7 @@ const ModalFormTask = () => {
                     </div>
                     <input
                       type='submit'
-                      value='Create task'
+                      value={id ? 'Edit task' : 'Create task'}
                       className='mx-auto block cursor-pointer rounded-md bg-sky-600 p-1 text-white transition-colors hover:bg-sky-700'
                     />
                   </form>
