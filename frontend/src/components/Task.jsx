@@ -3,7 +3,7 @@ import useProjects from '../hooks/useProjects'
 
 const Task = ({ task }) => {
   const { description, priority, name, deliveryDate, state } = task
-  const { handleEditTaskModal } = useProjects()
+  const { handleEditTaskModal, handleDeleteTaskModal } = useProjects()
   return (
     <div className='relative flex items-center justify-between rounded-lg border-b bg-white p-2'>
       <div>
@@ -14,21 +14,28 @@ const Task = ({ task }) => {
       </div>
       <div className='flex gap-x-2'>
         {state ? (
-          <button className='rounded-lg bg-green-500 p-1 text-white'>
+          <button
+            type='button'
+            className='rounded-lg bg-green-500 p-1 text-white'
+          >
             Done
           </button>
         ) : (
-          <button className='rounded-lg bg-blue-500 p-1 font-semibold text-white'>
+          <button
+            type='button'
+            className='rounded-lg bg-blue-500 p-1 font-semibold text-white'
+          >
             Undone
           </button>
         )}
         <button
+          type='button'
           onClick={() => handleEditTaskModal(task)}
           className='rounded-lg border bg-gray-400 p-2 text-white'
         >
           Edit
         </button>
-        <button>Delete</button>
+        <button onClick={() => handleDeleteTaskModal(task)}>Delete</button>
       </div>
     </div>
   )

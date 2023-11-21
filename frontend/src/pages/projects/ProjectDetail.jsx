@@ -4,17 +4,20 @@ import useProjects from '../../hooks/useProjects'
 import Spinner from '../../components/Spinner'
 import ModalFormTask from '../../components/ModalFormTask'
 import Task from '../../components/Task'
+import ModalDeleteTask from '../../components/ModalDeleteTask'
+import Alert from '../../components/Alert'
 
 const ProjectDetail = () => {
   const { id } = useParams()
-  const { getProject, project, isLoading, handleModalTask } = useProjects()
+  const { getProject, project, isLoading, handleModalTask, alert } =
+    useProjects()
   const { name } = project
 
   useEffect(() => {
     getProject(id)
   }, [])
+  const { msg } = alert
 
-  
   if (!isLoading) {
     return (
       <div className='p-6'>
@@ -63,14 +66,22 @@ const ProjectDetail = () => {
           </svg>
         </button>
         <ModalFormTask />
-        <h2 className='text-xl font-semibold mt-3'>Project Tasks: </h2>
+        <ModalDeleteTask />
+        <h2 className='mt-3 text-xl font-semibold'>Project Tasks: </h2>
+        {msg && (
+          <div className='w-48 mx-auto'>
+            <Alert alert={alert} />
+          </div>
+        )}
         <div className='flex flex-col gap-y-3 pt-2'>
-          {project.tasks?.map(task => <Task key ={task._id} task={task}/>)}
+          {project.tasks?.map((task) => (
+            <Task key={task._id} task={task} />
+          ))}
         </div>
       </div>
     )
   } else {
-    <>
+    ;<>
       <Spinner />
     </>
   }
