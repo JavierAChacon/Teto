@@ -69,7 +69,7 @@ const ProjectDetail = () => {
         <ModalDeleteTask />
         <h2 className='mt-3 text-xl font-semibold'>Project Tasks: </h2>
         {msg && (
-          <div className='w-48 mx-auto'>
+          <div className='mx-auto w-48'>
             <Alert alert={alert} />
           </div>
         )}
@@ -77,6 +77,15 @@ const ProjectDetail = () => {
           {project.tasks?.map((task) => (
             <Task key={task._id} task={task} />
           ))}
+        </div>
+        <div className='flex justify-between items-center mt-3'>
+          <h2 className='text-xl font-semibold'>Collaborators:</h2>
+          <Link
+            to={`/projects/new-collaborator/${project._id}`}
+            className='rounded-lg bg-orange-400 p-1 text-white text-md'
+          >
+            Add collaborator
+          </Link>
         </div>
       </div>
     )

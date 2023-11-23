@@ -12,6 +12,7 @@ import NewProject from './pages/projects/NewProject'
 import { ProjectsProvider } from './context/ProjectsProvider'
 import ProjectDetail from './pages/projects/ProjectDetail'
 import EditProject from './pages/projects/EditProject'
+import NewCollaborator from './pages/projects/NewCollaborator'
 
 function App () {
   return (
@@ -31,7 +32,8 @@ function App () {
               <Route index element={<Projects />} />
               <Route path='new' element={<NewProject />} />
               <Route path=':id' element={<ProjectDetail />} />
-              <Route path='/projects/edit/:id' element={<EditProject />} />
+              <Route path='edit/:id' element={<EditProject />} />
+              <Route path='new-collaborator/:id' element={<NewCollaborator />} />
             </Route>
           </Routes>
         </ProjectsProvider>
