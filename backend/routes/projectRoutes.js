@@ -4,9 +4,7 @@ import {
   newProject,
   getProject,
   editProject,
-  deleteProject,
-  addCollaborator,
-  deleteCollaborator
+  deleteProject
 } from '../controllers/projectController.js'
 import checkAuth from '../middlewares/checkAuth.js'
 
@@ -18,6 +16,5 @@ router.route('/:id')
   .get(checkAuth, getProject)
   .delete(checkAuth, deleteProject)
   .put(checkAuth, editProject)
-router.post('/add-collaborator/:id', checkAuth, addCollaborator)
-router.post('/delete-collaborator/:id', checkAuth, deleteCollaborator)
+
 export default router

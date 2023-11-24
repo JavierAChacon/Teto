@@ -78,15 +78,6 @@ const ProjectDetail = () => {
             <Task key={task._id} task={task} />
           ))}
         </div>
-        <div className='flex justify-between items-center mt-3'>
-          <h2 className='text-xl font-semibold'>Collaborators:</h2>
-          <Link
-            to={`/projects/new-collaborator/${project._id}`}
-            className='rounded-lg bg-orange-400 p-1 text-white text-md'
-          >
-            Add collaborator
-          </Link>
-        </div>
       </div>
     )
   } else {

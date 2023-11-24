@@ -96,7 +96,7 @@ const ProjectsProvider = ({ children }) => {
     setTimeout(() => navigate('/projects'), [2000])
   }
 
-  const getProject = async (id) => {
+  const getProject = async id => {
     const token = sessionStorage.getItem('token')
     const config = {
       headers: {
@@ -110,6 +110,10 @@ const ProjectsProvider = ({ children }) => {
         const { data } = await axiosClient(`/projects/${id}`, config)
         setProject(data)
       } catch (error) {
+        setAlert({
+          msg: error.response.data.msg,
+          error: true
+        })
         console.log(error)
       } finally {
         setIsLoading(false)
