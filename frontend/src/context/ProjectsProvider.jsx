@@ -15,6 +15,8 @@ const ProjectsProvider = ({ children }) => {
   const [modalFormTask, setModalFormTask] = useState(false)
   const [task, setTask] = useState({})
   const [modalDeleteTask, setModalDeleteTask] = useState(false)
+  const [search, setSearch] = useState('')
+  const [projectsFiltered, setProjectsFiltered] = useState([])
 
   useEffect(() => {
     const getProjects = async () => {
@@ -29,6 +31,7 @@ const ProjectsProvider = ({ children }) => {
           }
           const { data } = await axiosClient('/projects', config)
           setProjects(data)
+          setProjectsFiltered([projects])
         }
       } catch (error) {
         console.log(error)
@@ -38,6 +41,8 @@ const ProjectsProvider = ({ children }) => {
     }
     getProjects()
   }, [auth])
+
+  useEffect(() => setProjectsFiltered(projects), [projects])
 
   const submitProjects = async (project) => {
     const token = sessionStorage.getItem('token')
@@ -96,7 +101,7 @@ const ProjectsProvider = ({ children }) => {
     setTimeout(() => navigate('/projects'), [2000])
   }
 
-  const getProject = async id => {
+  const getProject = async (id) => {
     const token = sessionStorage.getItem('token')
     const config = {
       headers: {
@@ -209,9 +214,11 @@ const ProjectsProvider = ({ children }) => {
     try {
       const { data } = await axiosClient.delete(`/tasks/${task._id}`, config)
       setAlert({ msg: data.msg, error: true })
-      setTimeout(() => setAlert({}),[1100])
-      const updatedProject = {...project}
-      updatedProject.tasks = updatedProject.tasks.filter(taskState => taskState._id === data._id)
+      setTimeout(() => setAlert({}), [1100])
+      const updatedProject = { ...project }
+      updatedProject.tasks = updatedProject.tasks.filter(
+        (taskState) => taskState._id === data._id
+      )
       setProject(updatedProject)
       setModalDeleteTask(false)
       setTask({})
@@ -239,7 +246,11 @@ const ProjectsProvider = ({ children }) => {
         task,
         handleDeleteTaskModal,
         modalDeleteTask,
-        deleteTask
+        deleteTask,
+        setSearch,
+        search,
+        projectsFiltered,
+        setProjectsFiltered
       }}
     >
       {children}

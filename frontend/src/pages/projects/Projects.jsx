@@ -3,15 +3,15 @@ import useProjects from '../../hooks/useProjects.jsx'
 import Spinner from '../../components/Spinner.jsx'
 
 const Projects = () => {
-  const { isLoading, projects } = useProjects()
+  const { isLoading, projectsFiltered } = useProjects()
   if (!isLoading) {
     return (
       <div className='p-3'>
         <h1 className='text-4xl font-black'>Projects</h1>
         <div className='mt-5 rounded-lg bg-white p-2 shadow flex flex-col gap-y-3'>
-          {projects.length
+          {projectsFiltered?.length
             ? (
-                projects.map(project => {
+                projectsFiltered.map(project => {
                   const { name, deliveryDate, description, _id } = project
                   return (
                     <div key={_id} className='shadow flex p-3 bg-gray-100 justify-between items-center'>
